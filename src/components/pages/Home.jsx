@@ -7,7 +7,8 @@ function Home({ }) {
     const [loading, setLoading] = useState(false);
     const summonerData = useRef({});
 
-    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', undefined, undefined, false);
+
+    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', undefined, undefined, undefined, false);
 
     const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId",
         false,
@@ -21,16 +22,25 @@ function Home({ }) {
         false,
     );
 
+    const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("get", "getMatchesofSummoner", false);
+
+    const { data:dataMatchFull , loading:loadingMatchFull,error:errorMatchFull,execute:executeMatchFull  } = useFetch("get","getFullDataofMatch",false);
+
 
     useEffect(() => {
         const handleGetSummonerData = async () => {
             if (!dataAccount) return;
             try {
-                const queryParams = {
+                const pathParams = {
                     'encryptedPUUID': dataAccount.puuid
                 }
-                await executeGetSummonerbyPUUID(queryParams);
-                await executeGetMasterybyPUUID(queryParams);
+                const queryParams = {
+                    'start': 0,
+                    count: 20
+                }
+                await executeGetSummonerbyPUUID(pathParams);
+                await executeGetMasterybyPUUID(pathParams);
+                await executeGetMatchesbyPUUID(pathParams, queryParams)
 
             } catch (err) {
                 console.log(err)
@@ -46,17 +56,18 @@ function Home({ }) {
         setLoading(true);
         try {
             const { region, name } = Object.fromEntries(new FormData(e.target));
+            const [gameName, tagLine] = name.split("#");
             summonerData.current = {
                 ...summonerData.current,
                 region: region,
-                name: name
+                gameName: gameName,
+                tagLine: tagLine,
             }
-            const [gameName, tagLine] = name.split("#");
-            const queryParams = {
+            const pathParams = {
                 'gameName': gameName,
                 'tagLine': tagLine,
             }
-            await executeGetAccountbyRiotId(queryParams);
+            await executeGetAccountbyRiotId(pathParams);
             if (errorAccount || !dataAccount) throw new Error("Not exist")
         } catch (err) {
             console.log(err)
@@ -64,6 +75,8 @@ function Home({ }) {
             setLoading(false);
         }
     }
+
+    console.log(dataMatch)
     return (
         <>
             <div className='h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B]'>
@@ -84,39 +97,48 @@ function Home({ }) {
                                     <div className="size-6 border-4 border-black border-t-transparent rounded-full animate-spin" />
                                 </div>
                                 :
-                                <Img params={{icon:"search"}} />}
+                                <Img params={{ icon: "search" }} />}
                         </button>
                         {errorAccount && <p className="absolute -bottom-1/2 left-[1rem] text-white">Summoner not found</p>}
                     </form>
                 </div>
                 {/* Summoner Card */}
-                {loadingSummoner || loadingMastery ?
+                {loadingSummoner || loadingMastery || loadingMatch ?
                     <div>cargando</div>
                     :
-                    !dataSummoner || !dataMastery ?
+                    !dataSummoner || !dataMastery || !dataMatch ?
                         <div>Error</div>
                         :
                         <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-white">
                             <div className="flex justify-between space-x-2 p-4">
-                                <Img type="profile" params={{'idIcon':dataSummoner.profileIconId}} className={"relative w-48"} imgClassName={"rounded-full"}>
+                                <Img type="profile" params={{ 'idIcon': dataSummoner.profileIconId }} className={"relative w-48"} imgClassName={"rounded-full"}>
                                     <div className="absolute bottom-0 left-1/2 translate-y-1/3 -translate-x-1/2 bg-black rounded-lg p-2">
                                         <p className="font-bold">{dataSummoner.summonerLevel}</p>
                                     </div>
                                 </Img>
-                                <div>
-                                    <p>{summonerData.current.name}</p>
+                                <div className="space-y-2">
+                                    <div className="flex text-4xl">
+                                        <p className="font-semibold">{summonerData.current.gameName}</p>#<p>{summonerData.current.tagLine}</p>
+                                    </div>
                                     <div className="flex space-x-2">
                                         {dataMastery.map((e, i) => {
                                             const champion = Object.values(dataChampions.data).find(champion => parseInt(champion.key) === e.championId);
                                             const championUrlName = champion.name.replace(/[^A-Za-z]/g, '');
                                             return (
                                                 <div key={i}>
-                                                    <Img type="champion" params={{champ:championUrlName}}/>
+                                                    <Img type="champion" params={{ champ: championUrlName }} />
                                                     <div>{champion.name}</div>
                                                 </div>
                                             )
                                         })}
                                     </div>
+                                </div>
+                                <div className="flex items-center">
+                                    <div>
+                                        <div>{dataMatch.length}</div>
+                                        <p>Jugadas</p>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

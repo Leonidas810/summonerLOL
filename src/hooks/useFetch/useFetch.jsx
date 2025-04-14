@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import apiCatalog from './apiCatalog';
 
-const useFetch = (method = "get", api, immediate = true, queryParams = undefined, Auth = true) => {
+const useFetch = (method = "get", api, immediate = true, pathParams = undefined, queryParams = undefined, Auth = true) => {
   const [loading, setLoading] = useState(false);
   const responseData = useRef({
     data: null,
@@ -14,14 +14,14 @@ const useFetch = (method = "get", api, immediate = true, queryParams = undefined
   const baseUrl = apiCatalog[api]?.baseUrl || 'https://la1.api.riotgames.com';
   const url = apiCatalog[api]?.url || '';
 
-  const fetchData = useCallback(async (queryParams) => {
+  const fetchData = useCallback(async (pathParams,queryParams) => {
     setLoading(true)
     try {
       let tempUrl = url;
-      queryParams && Object.keys(queryParams).forEach(key => {
+      pathParams && Object.keys(pathParams).forEach(key => {
         const placeholder = `:${key}`;
         if (tempUrl.includes(placeholder)) {
-          tempUrl = tempUrl.replace(placeholder, queryParams[key]);
+          tempUrl = tempUrl.replace(placeholder, pathParams[key]);
         }
       });
       const fullUrl = `${baseUrl}${tempUrl}`;
@@ -34,7 +34,9 @@ const useFetch = (method = "get", api, immediate = true, queryParams = undefined
             "X-Riot-Token": import.meta.env.VITE_API_RIOT_KEY,
           },
         }),
+        ...(queryParams && { params: queryParams }),
       });
+
       responseData.current = {
         data: response.data,
         error: null
@@ -51,23 +53,23 @@ const useFetch = (method = "get", api, immediate = true, queryParams = undefined
     } finally {
       setLoading(false);
     }
-  }, [method, queryParams]);
+  }, [method, pathParams]);
 
 
   useEffect(() => {
     if (immediate) {
       const fetch = async () => {
-        await fetchData(queryParams);
+        await fetchData(pathParams,queryParams);
       };
       fetch();
     }
 
     return () => controller.abort();
-  }, [fetchData, immediate, queryParams]);
+  }, [immediate, pathParams,queryParams]);
 
 
-  const execute = async (queryParams = undefined) => {
-    await fetchData(queryParams);
+  const execute = async (pathParams = undefined,queryParams=undefined) => {
+    await fetchData(pathParams,queryParams);
   };
 
   return {

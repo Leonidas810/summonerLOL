@@ -14,6 +14,14 @@ const apiCatalog = {
   },
   getTopMasteryofSummoner:{
     url:'/lol/champion-mastery/v4/champion-masteries/by-puuid/:encryptedPUUID/top'
+  },
+  getMatchesofSummoner : {
+    baseUrl:'https://americas.api.riotgames.com',
+    url:'/lol/match/v5/matches/by-puuid/:encryptedPUUID/ids?'
+  },
+  getFullDataofMatch : {
+    baseUrl:'https://americas.api.riotgames.com',
+    url:'/lol/match/v5/matches/:matchId'
   }
 };
 

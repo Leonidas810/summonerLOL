@@ -18,7 +18,6 @@ function Img({
         }
     })
     finalSrc = `${type === 'icon' ? '':baseUrl}${url}`;
-    console.log(finalSrc);
 
     return (
         <div className={`${className}`}>
