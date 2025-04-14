@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback,useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import apiCatalog from './apiCatalog';
 
-const useFetch = (method = "get", api, immediate = true, queryParams=undefined) => {
+const useFetch = (method = "get", api, immediate = true, queryParams = undefined, Auth = true) => {
   const [loading, setLoading] = useState(false);
-  const responseData  = useRef({
+  const responseData = useRef({
     data: null,
     error: null,
   });
-  
+
 
   const controller = new AbortController();
   const baseUrl = apiCatalog[api]?.baseUrl || 'https://la1.api.riotgames.com';
@@ -17,7 +17,7 @@ const useFetch = (method = "get", api, immediate = true, queryParams=undefined) 
   const fetchData = useCallback(async (queryParams) => {
     setLoading(true)
     try {
-      let tempUrl  = url;
+      let tempUrl = url;
       queryParams && Object.keys(queryParams).forEach(key => {
         const placeholder = `:${key}`;
         if (tempUrl.includes(placeholder)) {
@@ -29,27 +29,29 @@ const useFetch = (method = "get", api, immediate = true, queryParams=undefined) 
         method,
         url: fullUrl,
         signal: controller.signal,
-        headers: {
-          "X-Riot-Token": import.meta.env.VITE_API_RIOT_KEY,
-        },
+        ...(Auth && {
+          headers: {
+            "X-Riot-Token": import.meta.env.VITE_API_RIOT_KEY,
+          },
+        }),
       });
-      responseData.current={
+      responseData.current = {
         data: response.data,
-        error:null
+        error: null
       };
     } catch (err) {
       if (axios.isCancel(err)) {
         console.log('Request canceled', err.message);
       } else {
-        responseData.current={
+        responseData.current = {
           data: null,
-          error:err
+          error: err
         };
       }
     } finally {
       setLoading(false);
     }
-  }, [method,queryParams]);
+  }, [method, queryParams]);
 
 
   useEffect(() => {
@@ -59,20 +61,20 @@ const useFetch = (method = "get", api, immediate = true, queryParams=undefined) 
       };
       fetch();
     }
-  
+
     return () => controller.abort();
   }, [fetchData, immediate, queryParams]);
-  
+
 
   const execute = async (queryParams = undefined) => {
     await fetchData(queryParams);
   };
 
-  return { 
-    data : responseData.current.data, 
+  return {
+    data: responseData.current.data,
     loading,
-    error : responseData.current.error,
-    execute 
+    error: responseData.current.error,
+    execute
   };
 };
 
