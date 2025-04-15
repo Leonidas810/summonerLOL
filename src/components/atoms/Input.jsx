@@ -2,44 +2,39 @@ import { useState, useRef } from "react";
 import Img from "./Img";
 
 function Input({ name, containerClass, placeholder, inputClass, icon, iconClass }) {
+    const [selectedInput, setSelectedInput] = useState(false);
     const inputRef = useRef(null);
-    const placeHolderStyle = useRef({
-        top: "50%",
-        transform: 'translateY(-50%)',
-        left: icon ? "3rem" : "1rem",
-        fontSize: "1.2rem",
-        color: "gray",
-    })
-    const [selectInput, setSelectInput] = useState(false);
-
 
     const handleOnFocus = () => {
-        placeHolderStyle.current = {
-            left: icon ? "3rem" : "1rem",
-            top: "0%",
-            transform: 'translateY(0%)',
-            fontSize: ".7rem",
-            color: "#2B2B2B",
-            fontWeight: "bold"
-        }
-        setSelectInput(true);
+        setSelectedInput(true);
     }
 
     const handleOnBlur = () => {
         if (inputRef.current && inputRef.current.value === "") {
-            placeHolderStyle.current = {
-                left: icon ? "3rem" : "1rem",
-                top: "50%",
-                transform: 'translateY(-50%)',
-                fontSize: "1.2rem",
-                color: "gray",
-            }
-            setSelectInput(false);
+            setSelectedInput(false);
         }
     }
 
     return (
         <div className={`relative ${containerClass}`} onClick={() => inputRef.current.focus()}>
+            {/* Ícono izquierdo opcional */}
+            {icon && (
+                <Img
+                    type="icon"
+                    params={{ icon }}
+                    className={`${iconClass} absolute top-1/2 -translate-y-1/2 left-[1rem] transition-colors ${selectedInput ? "invert-0" : "invert-50"}`}
+                />
+            )}
+
+            {/* Etiqueta flotante / placeholder */}
+            <p
+                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selectedInput ? `text-xs top-0 text-[#2B2B2B] font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
+                    }`}
+            >
+                {placeholder}
+            </p>
+
+            {/* Campo de Input */}
             <input
                 name={name}
                 id={name}
@@ -48,10 +43,7 @@ function Input({ name, containerClass, placeholder, inputClass, icon, iconClass 
                 onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
             />
-            <p className='absolute transition-all select-text' style={placeHolderStyle.current}>
-                {placeholder}
-            </p>
-            {icon && <Img type="icon" params={{icon:icon}} className={`${iconClass} absolute top-1/2 -translate-y-1/2 left-[1rem] transition-colors ${selectInput ? "invert-0" : "invert-50"}`} />}
+
         </div>
     );
 }

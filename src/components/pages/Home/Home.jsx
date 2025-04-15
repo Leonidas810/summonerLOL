@@ -8,9 +8,7 @@ function Home({ }) {
 
     const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', undefined, undefined, undefined, false);
 
-    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId",
-        false,
-    );
+    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId",false,);
 
     const { data: dataSummoner, loading: loadingSummoner, error: errorSummoner, execute: executeGetSummonerbyPUUID } = useFetch("get", "getSummonerbyPUUID",
         false,
@@ -30,6 +28,7 @@ function Home({ }) {
             if (!dataAccount) return;
             try {
                 const pathParams = {
+                    'region': summonerData.current.region,
                     'encryptedPUUID': dataAccount.puuid
                 }
                 const queryParams = {
@@ -110,7 +109,6 @@ function Home({ }) {
                                                     <div className="absolute border-2 border-[#484848] top-0 right-0 translate-x-1/2 bg-black rounded-full p-[4px]">
                                                         <p className="font-bold">{e.level}</p>
                                                     </div>
-
                                                 </Img>
                                             </div>
                                         )

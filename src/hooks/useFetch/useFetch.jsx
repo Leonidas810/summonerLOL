@@ -9,9 +9,8 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
     error: null,
   });
 
-
   const controller = new AbortController();
-  const baseUrl = apiCatalog[api]?.baseUrl || 'https://la1.api.riotgames.com';
+  const baseUrl = apiCatalog[api]?.baseUrl || `https://:region.api.riotgames.com`;
   const url = apiCatalog[api]?.url || '';
 
   const fetchData = useCallback(async (pathParams,queryParams) => {
@@ -24,7 +23,7 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
           tempUrl = tempUrl.replace(placeholder, pathParams[key]);
         }
       });
-      const fullUrl = `${baseUrl}${tempUrl}`;
+      const fullUrl = `${pathParams?.region ? baseUrl.replace(":region",pathParams.region) : baseUrl}${tempUrl}`;
       const response = await axios({
         method,
         url: fullUrl,
