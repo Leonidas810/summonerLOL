@@ -1,14 +1,14 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import './App.css';
-import Home from './components/pages/home';
+import Home from './components/pages/Home/Home';
 
 function App() {
   return (
-    <BrowserRouter> 
+    <BrowserRouter>
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/:summonerName" element={<div></div>}/>
+        <Route path="/:summonerName" element={<div></div>} />
       </Routes>
     </BrowserRouter>
   );
