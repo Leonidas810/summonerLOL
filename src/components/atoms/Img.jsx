@@ -20,8 +20,8 @@ function Img({
     finalSrc = `${type === 'icon' ? '':baseUrl}${url}`;
 
     return (
-        <div className={`${className}`}>
-            <img className={`${imgClassName}`} src={`${finalSrc}`} alt={`icon`} />
+        <div className={`${className || ""}`}>
+            <img className={`${imgClassName || ""}`} src={`${finalSrc}`} alt={`icon`} />
             {children}
         </div>
     )
