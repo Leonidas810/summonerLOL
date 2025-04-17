@@ -3,7 +3,8 @@ import Img from "../../../../atoms/Img";
 function SummonerCard({section,loadingSummoner,loadingMastery,loadingMatch,dataSummoner,dataMastery,dataMatch,summonerData}) {
 
     return (
-        <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 ${section === 2 ? "top-1/2 -translate-y-1/2" : "top-2/2 translate-y-2/2"} text-white`}>
+        <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 
+        ${section === 2 ? "top-1/2 -translate-y-1/2" : section===3 ? "top-12" : "top-2/2 translate-y-2/2"} text-white shadow-2xl`}>
             {
                 loadingSummoner || loadingMastery || loadingMatch ?
                     <div className="animate-pulse flex items-center justify-between space-x-2 p-4 rounded-2xl bg-[#1E2939]">

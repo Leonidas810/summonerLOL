@@ -1,14 +1,17 @@
 import SearchBar from "./Sections/SearchBar/searchBar";
-import Img from "../../atoms/Img";
 import useFetch from "../../../hooks/useFetch/useFetch";
 import { useEffect, useRef, useState } from "react";
 import SummonerCard from "./Sections/SummonerCard/SummonerCard";
+import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
 
 function Home({ }) {
     const [section, setSection] = useState(1);
     const summonerData = useRef({});
+    const parseSpells = useRef({});
 
-    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', undefined, undefined, undefined, false);
+    const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('get', 'getAllSpells', true, undefined, undefined, false);
+
+    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', true, undefined, undefined, false);
 
     const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId", false,);
 
@@ -22,7 +25,14 @@ function Home({ }) {
 
     const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("get", "getMatchesofSummoner", false);
 
-    const { data: dataMatchFull, loading: loadingMatchFull, error: errorMatchFull, execute: executeMatchFull } = useFetch("get", "getFullDataofMatch", false);
+
+    useEffect(() => {
+        const handleParseSpells = () => {
+            console.log(dataSpells);
+        }
+        handleParseSpells();
+    }, [dataSpells])
+
 
 
 
@@ -61,7 +71,7 @@ function Home({ }) {
                 }
                 const queryParams = {
                     'start': 0,
-                    count: 20
+                    count: 2
                 }
                 await executeGetSummonerbyPUUID(pathParams);
                 await executeGetMasterybyPUUID(pathParams);
@@ -76,6 +86,7 @@ function Home({ }) {
     }, [dataAccount])
 
 
+
     useEffect(() => {
         const handleWheel = (e) => {
             const isInDropdown = e.target.closest('.dropdown-scroll');
@@ -84,7 +95,7 @@ function Home({ }) {
             if (loadingSummoner || loadingMastery || loadingMatch) return;
             setSection((prevSection) => {
                 if (e.deltaY > 0) {
-                    return Math.min(prevSection + 1, 2);
+                    return Math.min(prevSection + 1, 3);
                 } else {
                     return Math.max(prevSection - 1, 1);
                 }
@@ -104,9 +115,11 @@ function Home({ }) {
                 <SearchBar section={section} summonerData={summonerData} loadingSummoner={loadingSummoner} executeGetAccountbyRiotId={executeGetAccountbyRiotId} dataAccount={dataAccount} loadingAccount={loadingAccount} errorAccount={errorAccount} />
                 {/* Summoner Card */}
                 {dataAccount &&
-                    <SummonerCard section={section} loadingSummoner={loadingSummoner} loadingMastery={loadingMastery} loadingMatch={loadingMatch} dataSummoner={dataSummoner} dataMastery={dataMastery} dataMatch={dataMatch} summonerData={summonerData}/>
+                    <>
+                        <SummonerCard section={section} loadingSummoner={loadingSummoner} loadingMastery={loadingMastery} loadingMatch={loadingMatch} dataSummoner={dataSummoner} dataMastery={dataMastery} dataMatch={dataMatch} summonerData={summonerData} />
+                        {dataMatch && <SummonerMatch summonerData={summonerData} section={section} dataMatch={dataMatch} dataAccount={dataAccount} dataSpells={dataSpells} />}
+                    </>
                 }
-
             </div>
         </>
     )
