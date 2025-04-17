@@ -36,6 +36,7 @@ function Input({ name, containerClass, placeholder, inputClass, icon, iconClass 
 
             {/* Campo de Input */}
             <input
+                required
                 name={name}
                 id={name}
                 ref={inputRef}

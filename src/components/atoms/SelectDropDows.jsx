@@ -53,7 +53,7 @@ function SelectDropDown({ options, name, containerClass, placeholder, inputClass
 
             {/* Campo de selección */}
             <div
-                className={`w-full h-full border px-4 py-2 cursor-pointer ${inputClass} flex justify-center items-center`}
+                className={`dropdown-scroll w-full h-full border px-4 py-2 cursor-pointer ${inputClass} flex justify-center items-center`}
                 onClick={toggleDropdown}
             >
                 {selected ? selected.label : ""}
@@ -62,7 +62,7 @@ function SelectDropDown({ options, name, containerClass, placeholder, inputClass
             {/* Opciones desplegables */}
             {isOpen && (
                 <div
-                    className="absolute z-10 mt-1 w-full max-h-48 overflow-y-auto bg-white border rounded shadow-md"
+                    className="dropdown-scroll absolute z-10 mt-1 w-full max-h-48 overflow-y-auto bg-white border rounded shadow-md"
                     onClick={(e) => {
                         const optionIndex = e.target.getAttribute('data-index');
                         if (optionIndex !== null) {
@@ -81,7 +81,7 @@ function SelectDropDown({ options, name, containerClass, placeholder, inputClass
                     ))}
                 </div>
             )}
-            <input type="hidden" name={name} value={selected?.value || ''} />
+            <input type="hidden" required name={name} value={selected?.value || ''} />
         </div>
     );
 }
