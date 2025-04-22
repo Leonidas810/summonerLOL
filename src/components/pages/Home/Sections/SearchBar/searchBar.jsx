@@ -3,43 +3,53 @@ import SelectDropDown from "../../../../atoms/SelectDropDows";
 import Img from "../../../../atoms/Img";
 import regionOptions from "./constants";
 
-function SearchBar({ section, summonerData, loadingSummoner, executeGetAccountbyRiotId, dataAccount, loadingAccount, errorAccount }) {
+function SearchBar({ section,handleGetAccount, loadingSummoner, dataAccount, loadingAccount, errorAccount }) {
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const { region, name } = Object.fromEntries(new FormData(e.target));
-            const [gameName, tagLine] = name.split("#");
-            if (summonerData.current.gameName === gameName) return;
-            const pathParams = {
-                'region': region,
-                'gameName': gameName,
-                'tagLine': tagLine,
-            }
-            await executeGetAccountbyRiotId(pathParams);
-            summonerData.current = {
-                ...summonerData.current,
-                ...pathParams,
-            }
-        } catch (err) {
-            console.log(err)
+    const handleSectionSearchBar = (section) => {
+        if(!dataAccount)return 'top-1/2 -translate-y-1/2';
+        switch (section) {
+            case 1:
+                return 'top-1/2 -translate-y-1/2';
+            case 2:
+                return 'top-10';
+            case 3:
+                return 'hidden';
+            default:
+                return '';
         }
+    };
+
+    const handleSectionLogo = (section) => {
+        if(!dataAccount)return 'tw-28 top-1/10 left-1/10';
+        switch (section) {
+            case 1:
+                return 'w-28 top-1/10 left-1/10';
+            case 2:
+                return 'w-12 top-12 left-10';
+            case 3:
+                return 'hidden';
+            default:
+                return '';
+        }
+    };
+    
+
+    const handleSubmit =  (e) => {
+        e.preventDefault();
+        const { region, name } = Object.fromEntries(new FormData(e.target));
+        const [gameName, tagLine] = name.split("#");
+        handleGetAccount(gameName,tagLine,region);
     }
 
     return (
         <>
             {/* LOL LOGO */}
             <div className={`absolute transition-all duration-300  
-                ${dataAccount && section === 2 
-                    ? "w-12 top-12 left-10" 
-                    :dataAccount && section===3 
-                        ? "hidden" 
-                        : "w-28 top-1/10 left-1/10"}`}>
+                ${handleSectionLogo(section)}`}>
                 <Img type="icon" params={{ icon: "logo-LOL" }} />
             </div>
             {/* Summoner Search Bar */}
-            <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 
-                ${dataAccount && section === 2 ? "top-12" :dataAccount && section===3 ? "hidden" : "top-1/2 -translate-y-1/2"} shadow-2xl`}>
+            <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 shadow-2xl ${handleSectionSearchBar(section)}`}>
                 {(!dataAccount || section === 1) && <p className=' text-6xl mb-4 italic text-white'>Summoner Search</p>}
                 <form onSubmit={handleSubmit} className='relative flex bg-[#D9D9D9] rounded-lg h-14'>
                     <SelectDropDown options={regionOptions} name={"region"} containerClass={"w-1/4 h-full rounded-l-lg"} placeholder={"Region"} icon={"hashtag"} iconClass={"w-6"} inputClass={"w-full"} />
