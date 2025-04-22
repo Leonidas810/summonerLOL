@@ -11,11 +11,11 @@ function SearchBar({ section,handleGetAccount, loadingSummoner, dataAccount, loa
             case 1:
                 return 'top-1/2 -translate-y-1/2';
             case 2:
-                return 'top-10';
+                return 'top-1/10 -translate-y-1/2';
             case 3:
-                return 'hidden';
+                return '-top-1/2';
             default:
-                return '';
+                return 'hidden -top-1/2';
         }
     };
 
@@ -25,11 +25,11 @@ function SearchBar({ section,handleGetAccount, loadingSummoner, dataAccount, loa
             case 1:
                 return 'w-28 top-1/10 left-1/10';
             case 2:
-                return 'w-12 top-12 left-10';
+                return 'w-12 top-1/10 -translate-y-1/2 left-10';
             case 3:
-                return 'hidden';
+                return 'w-12 -top-1/2 left-10';
             default:
-                return '';
+                return 'hidden';
         }
     };
     

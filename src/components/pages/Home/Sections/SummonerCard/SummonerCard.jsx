@@ -2,22 +2,24 @@ import Img from "../../../../atoms/Img";
 
 function SummonerCard({section,loadedAll,dataSummoner,dataMastery,summonerData}) {
     
-    const handleSectionMove = (section) =>{
-        switch(section){
-            case 1 :
-                return 'top-2/2 translate-y-2/2';
-            case 2 :
-                return 'top-1/2 -translate-y-1/2';
+    const handleSectionMoveStyle = (section)=>{
+        switch (section) {
+            case 1:
+                return {top:'100%'};
+            case 2:
+                return {top:'50%',transform:'translateY(-50%)'};
             case 3:
-                return 'top-10';
+                return {top:'25%',transform:'translateY(-50%)'};
+            case 4:
+                return {top:'-50%'}
             default:
-                return ''
-        }
+                return {visibility:'hidden',top:'-50%'};        
+            }
     }
 
     return (
-        <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 
-        ${handleSectionMove(section)} text-white shadow-2xl`}>
+        <div className={`z-10 absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 
+         text-white shadow-2xl`} style={handleSectionMoveStyle(section)}>
             {
                 (loadedAll) ?
                     <div className="animate-pulse flex items-center justify-between space-x-2 p-4 rounded-2xl bg-[#1E2939]">

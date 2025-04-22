@@ -64,7 +64,7 @@ function Home({ }) {
                 }
                 const queryParams = {
                     'start': 0,
-                    count: 2
+                    count: 10
                 }
                 await executeGetSummonerbyPUUID(pathParams);
                 await executeGetMatchesbyPUUID(pathParams, queryParams);
@@ -87,7 +87,7 @@ function Home({ }) {
             if (loadingSummoner || loadingMastery || loadingMatch) return;
             setSection((prevSection) => {
                 if (e.deltaY > 0) {
-                    return Math.min(prevSection + 1, 3);
+                    return Math.min(prevSection + 1, 10);
                 } else {
                     return Math.max(prevSection - 1, 1);
                 }
@@ -128,7 +128,7 @@ function Home({ }) {
                     <>
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
                         {dataMatch && 
-                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataAccount={dataAccount} dataSpells={dataSpells} executeGetAccountbyRiotId={executeGetAccountbyRiotId}/>}
+                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells}/>}
                     </>
                 }
             </div>
