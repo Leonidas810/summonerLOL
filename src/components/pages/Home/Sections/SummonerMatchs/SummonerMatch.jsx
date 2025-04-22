@@ -6,7 +6,6 @@ function SummonerMatch({ summonerData,loadedAll,handleGetAccount, section, dataM
         switch (section) {
             case 1:
             case 2:
-
                 return {visibility:'hidden',top:'100%'};
             case 3:
                 return {top:'50%'};

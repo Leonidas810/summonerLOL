@@ -52,7 +52,7 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
     } finally {
       setLoading(false);
     }
-  }, [method, pathParams]);
+  }, [method, pathParams,queryParams]);
 
 
   useEffect(() => {
