@@ -8,7 +8,7 @@ function SummonerMatch({ summonerData,loadedAll,handleGetAccount, section, dataM
             case 2:
                 return {visibility:'hidden',top:'100%'};
             case 3:
-                return {top:'50%'};
+                return {top:'70%'};
             case 4:
                 return {top:'0%'}
             default:

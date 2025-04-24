@@ -3,11 +3,12 @@ import useFetch from "../../../hooks/useFetch/useFetch";
 import { useEffect, useRef, useState } from "react";
 import SummonerCard from "./Sections/SummonerCard/SummonerCard";
 import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
-import { data } from "react-router-dom";
+import Input from "../../atoms/input";
+
 
 function Home({ }) {
     const [section, setSection] = useState(1);
-    const [loadedAll,setLoadedAll] = useState(false);
+    const [loadedAll, setLoadedAll] = useState(false);
     const summonerData = useRef({});
 
     const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('get', 'getAllSpells', true, undefined, undefined, false);
@@ -100,10 +101,10 @@ function Home({ }) {
     }, []);
 
 
-    const handleGetAccount = async (gameName,tagLine,region=undefined) =>{
-        try{
+    const handleGetAccount = async (gameName, tagLine, region = undefined) => {
+        try {
             const pathParams = {
-                'region': region ? region :summonerData.current.region,
+                'region': region ? region : summonerData.current.region,
                 'gameName': gameName,
                 'tagLine': tagLine,
             }
@@ -112,7 +113,7 @@ function Home({ }) {
                 ...summonerData.current,
                 ...pathParams,
             }
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
@@ -127,8 +128,27 @@ function Home({ }) {
                 {dataAccount &&
                     <>
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
-                        {dataMatch && 
-                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells}/>}
+                        {/* Filter Card */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-3/4">
+                            <div className="w-full bg-[#D9D9D9] p-2 rounded-lg">
+                                <form className="flex">
+                                    <Input
+                                        name={"Queue"}
+                                        placeholder={"Introduce la Cola"}>
+                                    </Input>
+                                    <Input
+                                        name={"startTime"}
+                                        placeholder={"Feche de inicio"}>
+                                    </Input>
+                                    <Input
+                                        name={"endTime"}
+                                        placeholder={"Feche de fin"}>
+                                    </Input>
+                                </form>
+                            </div>
+                        </div>
+                        {dataMatch &&
+                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />}
                     </>
                 }
             </div>
