@@ -38,7 +38,7 @@ function SelectDropDown({
             <Img
                 type="icon"
                 params={{ icon: "downA" }}
-                className={`${iconClass} absolute top-1/2 -translate-y-1/2 right-[1rem] transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`}
+                className={`${iconClass} absolute top-1/2 -translate-y-1/2 right-0.5 sm:right-[1rem] transition-transform ${isOpen ? "rotate-180" : "rotate-0"}`}
                 onClick={toggleDropdown}
             />
 
@@ -47,13 +47,13 @@ function SelectDropDown({
                 <Img
                     type="icon"
                     params={{ icon }}
-                    className={`${iconClass} absolute top-1/2 -translate-y-1/2 left-[1rem] transition-colors ${selected || isOpen ? "invert-0" : "invert-50"}`}
+                    className={`${iconClass} hidden sm:block absolute top-1/2 -translate-y-1/2 left-[1rem] transition-colors ${selected || isOpen ? "invert-0" : "invert-50"}`}
                 />
             )}
 
             {/* Etiqueta flotante / placeholder */}
             <p
-                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selected || isOpen ? `text-xs -top-1/2 translate-y-1/2 text-white font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
+                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-0.5 sm:left-[3rem]" : "sm:left-[1rem]"}  ${selected || isOpen ? `text-xs -top-1/2 translate-y-1/2 text-white font-bold` : `text-[1rem] sm:text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
                     }`}
             >
                 {placeholder}

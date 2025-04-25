@@ -5,7 +5,8 @@ function Img({
     params,
     className,
     imgClassName,
-    children
+    children,
+    onClick=undefined,
 }) {
 
     let finalSrc = '';
@@ -20,7 +21,9 @@ function Img({
     finalSrc = `${type === 'icon' ? '':baseUrl}${url}`;
 
     return (
-        <div className={`${className || ""}`}>
+        <div className={`${className || ""}`}
+        onClick={onClick ?? (() => {})}
+        >
             <img className={`${imgClassName || ""}`} src={`${finalSrc}`} alt={`icon`} />
             {children}
         </div>

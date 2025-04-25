@@ -36,18 +36,17 @@ function MatchCard({ summonerData, loadedAll, match, dataSpells, handleGetAccoun
     };
     
 
-
     const participants = dataMatchFull?.info?.participants || null;
     const teamBlue = participants && participants.slice(0, 5) || null;
     const teamRed = participants && participants.slice(5) || null;
-
+    
     return (
         <div className={`shadow-2xl rounded-2xl ${loadedAll || loadingMatchFull || !mySummoner.current ? "bg-[#1E2939]" : mySummoner.current?.win ? "bg-[#87D5FF] text-[#244B60]" : "bg-[#FF8787] text-[#602424]"}`}>
-            <div className="flex justify-between p-2">
-                <div className="flex space-x-10">
+            <div className="flex flex-col sm:flex-row justify-between p-2 space-y-2">
+                <div className="flex flex-col sm:flex-row space-y-6 sm:space-y-0 sm:space-x-10">
                     <div className="space-y-1">
                         <p className="font-bold text-3xl">{loadedAll || loadingMatchFull || !mySummoner.current ? "Cargando..." : mySummoner.current?.win ? "Victoria" : "Derrota"}</p>
-                        <p>{loadedAll || loadingMatchFull || !mySummoner.current ? "Cargando..." : dataMatchFull.info.gameMode}</p>
+                        <p>{loadedAll || loadingMatchFull || !mySummoner.current ? "Cargando..." : dataMatchFull.info?.gameMode || ''}</p>
                         <p className="font-bold text-xl">{loadedAll || loadingMatchFull || !mySummoner.current ? "Cargando..." : parseTime(dataMatchFull.info.gameDuration)}</p>
                     </div>
                     <div className="space-y-2">

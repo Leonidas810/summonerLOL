@@ -9,7 +9,9 @@ function SearchBar({
     loadingSummoner, 
     dataAccount, 
     loadingAccount, 
-    errorAccount }) {
+    errorAccount,
+    errorSummoner
+}) {
 
     const handleSectionSearchBar = (section) => {
         if(!dataAccount)return 'top-1/2 -translate-y-1/2';
@@ -31,7 +33,7 @@ function SearchBar({
             case 1:
                 return 'w-28 top-1/10 left-1/10';
             case 2:
-                return 'w-12 top-1/10 -translate-y-1/2 left-10';
+                return 'w-12 top-1/10 -translate-y-1/2 left-10 hidden sm:block';
             case 3:
                 return 'w-12 -top-1/2 left-10';
             default:
@@ -56,7 +58,7 @@ function SearchBar({
             </div>
             {/* Summoner Search Bar */}
             <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 shadow-2xl ${handleSectionSearchBar(section)}`}>
-                {(!dataAccount || section === 1) && <p className=' text-6xl mb-6 italic text-white'>Summoner Search</p>}
+                <p className={`text-4xl sm:text-6xl mb-6 italic text-white ${(!dataAccount || section === 1) ? "block" :"hidden"}`}>Summoner Search</p>
                 <form onSubmit={handleSubmit} className='relative flex bg-[#D9D9D9] rounded-lg h-14'>
                     <SelectDropDown options={regionOptions} name={"region"} containerClass={"w-1/4 h-full rounded-l-lg"} placeholder={"Region"} icon={"hashtag"} iconClass={"w-6"} inputClass={"w-full"} />
                     <Input type={"text"} name={"name"} containerClass={"w-3/4 rounded-r-lg"} placeholder={"Summoner name + #TAG"} inputClass={"w-7/8 border-l-2"} />
@@ -70,7 +72,7 @@ function SearchBar({
                             :
                             <Img params={{ icon: "search" }} />}
                     </button>
-                    {errorAccount && <p className="absolute -bottom-1/2 left-[1rem] text-white">Summoner not found</p>}
+                    {(errorAccount || errorSummoner) && <p className="absolute -bottom-1/2 left-[1rem] text-white">Summoner not found</p>}
                 </form>
             </div>
         </>

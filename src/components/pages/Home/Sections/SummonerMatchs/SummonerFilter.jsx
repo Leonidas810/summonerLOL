@@ -1,10 +1,25 @@
 import SelectDropDown from "../../../../atoms/SelectDropDows"
 import Input from "../../../../atoms/input"
 
-const SummonerFilter = () => {
+const SummonerFilter = ({section}) => {
+
+    const handleSectionMoveStyle = (section)=>{
+        switch (section) {
+            case 1:
+            case 2:
+                return {visibility:'hidden',top:'100%'};
+            case 3:
+                return {top:'45%'};
+            case 4:
+                return {top:'0%'}
+            default:
+                return {top:`${0 - ((section-4) * 22)}%`}
+        }
+    }
+
 
     return (
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-3/4">
+        <div className="absolute left-1/2 -translate-x-1/2 w-3/4 transition-all duration-300" style={handleSectionMoveStyle(section)}>
             <form className="relative flex bg-[#D9D9D9] rounded-lg h-14">
                 <SelectDropDown
                     containerClass={"w-2/4"}

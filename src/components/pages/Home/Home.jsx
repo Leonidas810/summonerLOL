@@ -22,7 +22,6 @@ function Home({ }) {
 
     const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("getMatchesofSummoner", false);
 
-
     useEffect(() => {
         const handleGetChampAssets = () => {
             if (!dataChampions || !dataChampions.data || !dataMastery) return;
@@ -51,8 +50,8 @@ function Home({ }) {
 
     useEffect(() => {
         const handleGetSummonerData = async () => {
-            setLoadedAll(true);
             if (!dataAccount) return;
+            setLoadedAll(true);
             try {
                 const pathParams = {
                     'region': summonerData.current.region,
@@ -60,7 +59,7 @@ function Home({ }) {
                 }
                 const queryParams = {
                     'start': 0,
-                    count: 10
+                    count: 5
                 }
                 await executeGetSummonerbyPUUID({pathParams:{...pathParams}});
                 await executeGetMatchesbyPUUID({pathParams:{...pathParams},queryParams:{...queryParams}});
@@ -79,8 +78,8 @@ function Home({ }) {
         const handleWheel = (e) => {
             const isInDropdown = e.target.closest('.dropdown-scroll');
             if (isInDropdown) return;
+            if(errorAccount || errorSummoner)return;
             e.preventDefault();
-            if (loadingSummoner || loadingMastery || loadingMatch) return;
             setSection((prevSection) => {
                 if (e.deltaY > 0) {
                     return Math.min(prevSection + 1, 10);
@@ -93,7 +92,7 @@ function Home({ }) {
         return () => {
             window.removeEventListener("wheel", handleWheel);
         };
-    }, []);
+    }, [errorAccount,errorSummoner]);
 
 
     const handleGetAccount = async (gameName, tagLine, region = undefined) => {
@@ -112,6 +111,7 @@ function Home({ }) {
                 ...summonerData.current,
                 ...pathParams,
             }
+
         } catch (err) {
             console.log(err);
         }
@@ -122,14 +122,14 @@ function Home({ }) {
         <>
             <div className='relative h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B] overflow-hidden'>
                 {/*Search Bar */}
-                <SearchBar section={section} handleGetAccount={handleGetAccount} loadingSummoner={loadingSummoner} dataAccount={dataAccount} loadingAccount={loadingAccount} errorAccount={errorAccount} />
+                <SearchBar section={section} handleGetAccount={handleGetAccount} loadingSummoner={loadingSummoner} dataAccount={dataAccount} loadingAccount={loadingAccount} errorAccount={errorAccount} errorSummoner={errorSummoner} />
                 {/* Summoner Card */}
-                {dataAccount &&
+                {(dataAccount&& dataSummoner) &&
                     <>
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
-                        <SummonerFilter/>
+                        <SummonerFilter section={section}/>
                         {/* Filter Card */}
-                        {dataMatch &&
+                        {dataMatch  &&
                             <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />}
                     </>
                 }

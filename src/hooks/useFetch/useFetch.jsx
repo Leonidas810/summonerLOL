@@ -61,7 +61,7 @@ const useFetch = (
         console.log('Request canceled', err.message);
 
       } else {
-
+        console.log(err);
         responseData.current = {
           data: null,
           error: err
@@ -69,7 +69,6 @@ const useFetch = (
       }
 
     } finally {
-      console.log(responseData.current)
       setLoading(false);
     }
   }, [customParams]);
