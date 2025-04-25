@@ -88,6 +88,7 @@ function Home({ }) {
                 }
             });
         };
+        if(errorAccount || errorSummoner)setSection(1);
         window.addEventListener("wheel", handleWheel, { passive: false });
         return () => {
             window.removeEventListener("wheel", handleWheel);
@@ -116,7 +117,6 @@ function Home({ }) {
             console.log(err);
         }
     }
-
 
     return (
         <>
