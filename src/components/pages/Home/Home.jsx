@@ -3,8 +3,7 @@ import useFetch from "../../../hooks/useFetch/useFetch";
 import { useEffect, useRef, useState } from "react";
 import SummonerCard from "./Sections/SummonerCard/SummonerCard";
 import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
-import Input from "../../atoms/input";
-
+import SummonerFilter from "./Sections/SummonerMatchs/SummonerFilter";
 
 function Home({ }) {
     const [section, setSection] = useState(1);
@@ -128,25 +127,8 @@ function Home({ }) {
                 {dataAccount &&
                     <>
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
+                        <SummonerFilter/>
                         {/* Filter Card */}
-                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-3/4">
-                            <div className="w-full bg-[#D9D9D9] p-2 rounded-lg">
-                                <form className="flex">
-                                    <Input
-                                        name={"Queue"}
-                                        placeholder={"Introduce la Cola"}>
-                                    </Input>
-                                    <Input
-                                        name={"startTime"}
-                                        placeholder={"Feche de inicio"}>
-                                    </Input>
-                                    <Input
-                                        name={"endTime"}
-                                        placeholder={"Feche de fin"}>
-                                    </Input>
-                                </form>
-                            </div>
-                        </div>
                         {dataMatch &&
                             <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />}
                     </>

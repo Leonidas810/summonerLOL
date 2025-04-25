@@ -1,7 +1,15 @@
 import { useState, useRef } from "react";
 import Img from "./Img";
 
-function Input({ name, containerClass, placeholder, inputClass, icon, iconClass }) {
+function Input({
+    name,
+    placeholder,
+    icon,
+    type,
+    containerClass,
+    inputClass,
+    iconClass
+}) {
     const [selectedInput, setSelectedInput] = useState(false);
     const inputRef = useRef(null);
 
@@ -27,20 +35,23 @@ function Input({ name, containerClass, placeholder, inputClass, icon, iconClass 
             )}
 
             {/* Etiqueta flotante / placeholder */}
-            <p
-                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selectedInput ? `text-xs top-0 text-[#2B2B2B] font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
-                    }`}
-            >
-                {placeholder}
-            </p>
+            {type === "text" &&
+                <p
+                    className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selectedInput ? `text-xs -top-1/2 translate-y-1/2 text-white font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
+                        }`}
+                >
+                    {placeholder}
+                </p>
+            }
 
             {/* Campo de Input */}
             <input
+                type={type}
                 required
                 name={name}
                 id={name}
                 ref={inputRef}
-                className={`${inputClass} h-full text-xl ${icon ? "pl-[3rem]" : "pl-[1rem]"} outline-0`}
+                className={`${inputClass} h-full text-xl ${icon ? "px-[3rem]" : "px-[1rem]"} outline-0`}
                 onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
             />

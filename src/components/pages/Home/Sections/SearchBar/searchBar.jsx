@@ -3,7 +3,13 @@ import SelectDropDown from "../../../../atoms/SelectDropDows";
 import Img from "../../../../atoms/Img";
 import regionOptions from "./constants";
 
-function SearchBar({ section,handleGetAccount, loadingSummoner, dataAccount, loadingAccount, errorAccount }) {
+function SearchBar({ 
+    section,
+    handleGetAccount, 
+    loadingSummoner, 
+    dataAccount, 
+    loadingAccount, 
+    errorAccount }) {
 
     const handleSectionSearchBar = (section) => {
         if(!dataAccount)return 'top-1/2 -translate-y-1/2';
@@ -50,10 +56,10 @@ function SearchBar({ section,handleGetAccount, loadingSummoner, dataAccount, loa
             </div>
             {/* Summoner Search Bar */}
             <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 shadow-2xl ${handleSectionSearchBar(section)}`}>
-                {(!dataAccount || section === 1) && <p className=' text-6xl mb-4 italic text-white'>Summoner Search</p>}
+                {(!dataAccount || section === 1) && <p className=' text-6xl mb-6 italic text-white'>Summoner Search</p>}
                 <form onSubmit={handleSubmit} className='relative flex bg-[#D9D9D9] rounded-lg h-14'>
                     <SelectDropDown options={regionOptions} name={"region"} containerClass={"w-1/4 h-full rounded-l-lg"} placeholder={"Region"} icon={"hashtag"} iconClass={"w-6"} inputClass={"w-full"} />
-                    <Input name={"name"} containerClass={"w-3/4 h-full rounded-r-lg"} placeholder={"Summoner name + #TAG"} inputClass={"w-7/8 border-l-2"} />
+                    <Input type={"text"} name={"name"} containerClass={"w-3/4 rounded-r-lg"} placeholder={"Summoner name + #TAG"} inputClass={"w-7/8 border-l-2"} />
                     <button type="submit" className="absolute right-[1rem] top-1/2 -translate-y-1/2"
                         disabled={loadingAccount}>
                         {loadingAccount || loadingSummoner

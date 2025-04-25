@@ -1,7 +1,15 @@
 import { useRef, useState } from "react";
 import Img from "./Img";
 
-function SelectDropDown({ options, name, containerClass, placeholder, inputClass, icon, iconClass }) {
+function SelectDropDown({ 
+    options, 
+    name, 
+    containerClass, 
+    placeholder, 
+    inputClass, 
+    icon, 
+    iconClass 
+}) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const containerRef = useRef(null);
@@ -45,7 +53,7 @@ function SelectDropDown({ options, name, containerClass, placeholder, inputClass
 
             {/* Etiqueta flotante / placeholder */}
             <p
-                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selected || isOpen ? `text-xs top-0 text-[#2B2B2B] font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
+                className={`absolute transition-all pointer-events-none select-none  ${icon ? "left-[3rem]" : "left-[1rem]"}  ${selected || isOpen ? `text-xs -top-1/2 translate-y-1/2 text-white font-bold` : `text-[1.2rem] top-1/2 -translate-y-1/2 text-[#616161]`
                     }`}
             >
                 {placeholder}
