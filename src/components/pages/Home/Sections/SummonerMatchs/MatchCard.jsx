@@ -3,14 +3,15 @@ import useFetch from "../../../../../hooks/useFetch/useFetch";
 import Img from "../../../../atoms/Img";
 
 function MatchCard({ summonerData, loadedAll, match, dataSpells, handleGetAccount }) {
-    const { data: dataMatchFull, loading: loadingMatchFull, error: errorMatchFull, execute: executeMatchFull } = useFetch("get", "getFullDataofMatch", false);
+    const { data: dataMatchFull, loading: loadingMatchFull, error: errorMatchFull, execute: executeMatchFull } = useFetch(
+        "getFullDataofMatch",false);
     const mySummoner = useRef(null)
 
     useEffect(() => {
         const pathParams = {
             'matchId': match,
         }
-        executeMatchFull(pathParams)
+        executeMatchFull({pathParams:{...pathParams}})
     }, [match])
 
     const handleOnClick = (riotIdGameName, riotIdTagline) => {

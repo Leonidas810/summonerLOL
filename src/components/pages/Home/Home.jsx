@@ -10,21 +10,17 @@ function Home({ }) {
     const [loadedAll, setLoadedAll] = useState(false);
     const summonerData = useRef({});
 
-    const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('get', 'getAllSpells', true, undefined, undefined, false);
+    const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('getAllSpells', true,undefined,false);
 
-    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', true, undefined, undefined, false);
+    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('getAllChampions', true,undefined,false);
 
-    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId", false,);
+    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("getAccountbyRiotId", false);
 
-    const { data: dataSummoner, loading: loadingSummoner, error: errorSummoner, execute: executeGetSummonerbyPUUID } = useFetch("get", "getSummonerbyPUUID",
-        false,
-    );
+    const { data: dataSummoner, loading: loadingSummoner, error: errorSummoner, execute: executeGetSummonerbyPUUID } = useFetch("getSummonerbyPUUID", false);
 
-    const { data: dataMastery, loading: loadingMastery, error: errorMastery, execute: executeGetMasterybyPUUID } = useFetch("get", "getTopMasteryofSummoner",
-        false,
-    );
+    const { data: dataMastery, loading: loadingMastery, error: errorMastery, execute: executeGetMasterybyPUUID } = useFetch("getTopMasteryofSummoner", false );
 
-    const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("get", "getMatchesofSummoner", false);
+    const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("getMatchesofSummoner", false);
 
 
     useEffect(() => {
@@ -66,9 +62,9 @@ function Home({ }) {
                     'start': 0,
                     count: 10
                 }
-                await executeGetSummonerbyPUUID(pathParams);
-                await executeGetMatchesbyPUUID(pathParams, queryParams);
-                await executeGetMasterybyPUUID(pathParams);
+                await executeGetSummonerbyPUUID({pathParams:{...pathParams}});
+                await executeGetMatchesbyPUUID({pathParams:{...pathParams},queryParams:{...queryParams}});
+                await executeGetMasterybyPUUID({pathParams:{...pathParams}});
 
             } catch (err) {
                 console.log(err)
@@ -107,7 +103,11 @@ function Home({ }) {
                 'gameName': gameName,
                 'tagLine': tagLine,
             }
-            await executeGetAccountbyRiotId(pathParams);
+            const customParams={
+                method:'get',
+                pathParams:{...pathParams},
+            }
+            await executeGetAccountbyRiotId(customParams);
             summonerData.current = {
                 ...summonerData.current,
                 ...pathParams,
