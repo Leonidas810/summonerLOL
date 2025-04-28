@@ -9,7 +9,7 @@ function Input({
     containerClass,
     inputClass,
     iconClass,
-    required=true
+    required = true
 }) {
     const [selectedInput, setSelectedInput] = useState(false);
     const inputRef = useRef(null);
@@ -52,10 +52,11 @@ function Input({
                 name={name}
                 id={name}
                 ref={inputRef}
-                className={`${inputClass} h-full text-xl ${icon ? "px-[3rem]" : "px-[1rem]"} outline-0`}
+                className={`${inputClass} h-full text-xl ${icon ? "px-[3rem]" : "px-[1rem]"} outline-0 `}
                 onFocus={handleOnFocus}
                 onBlur={handleOnBlur}
             />
+
 
         </div>
     );

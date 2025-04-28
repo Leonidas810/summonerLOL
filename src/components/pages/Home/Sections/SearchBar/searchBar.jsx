@@ -28,7 +28,7 @@ function SearchBar({
     };
 
     const handleSectionLogo = (section) => {
-        if(!dataAccount)return 'tw-28 top-1/10 left-1/10';
+        if(!dataAccount)return 'w-28 top-1/10 left-1/10';
         switch (section) {
             case 1:
                 return 'w-28 top-1/10 left-1/10';
