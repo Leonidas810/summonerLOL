@@ -1,6 +1,6 @@
 import MatchCard from "./MatchCard";
 
-function SummonerMatch({ summonerData,loadedAll,handleGetAccount, section, dataMatch, dataSpells }) {
+function SummonerMatch({ summonerData,handleGetAccount, section, dataMatch, dataSpells }) {
 
     const handleSectionMoveStyle = (section)=>{
         switch (section) {
@@ -16,12 +16,19 @@ function SummonerMatch({ summonerData,loadedAll,handleGetAccount, section, dataM
         }
     }
 
+
     return (
         <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 space-y-2`}
         style={handleSectionMoveStyle(section)}>
-            {dataMatch && dataMatch.map((match, _) => {
+            {dataMatch && 
+            dataMatch.length ===0 ?
+            <div className="text-white">
+                Sin informacion 
+            </div>
+            : 
+            dataMatch.map((match, _) => {
                 return (
-                    <MatchCard key={match} loadedAll={loadedAll} summonerData={summonerData} match={match} dataSpells={dataSpells}  handleGetAccount={handleGetAccount} />
+                    <MatchCard key={match} summonerData={summonerData} match={match} dataSpells={dataSpells}  handleGetAccount={handleGetAccount} />
                 )
             })}
         </div>

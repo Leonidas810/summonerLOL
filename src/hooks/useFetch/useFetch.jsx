@@ -4,15 +4,15 @@ import apiCatalog from './apiCatalog';
 
 const useFetch = (
   endPoint,
-  immediate = true, 
-  params={
-    method:'get',
-    pathParams:{},
-    queryParams:{},
+  immediate = true,
+  params = {
+    method: 'get',
+    pathParams: {},
+    queryParams: {},
   },
   Auth = true
 ) => {
-  const [customParams,setCustomParams] = useState(params);
+  const [customParams, setCustomParams] = useState(params);
   const [loading, setLoading] = useState(false);
   const responseData = useRef({
     data: null,
@@ -29,7 +29,7 @@ const useFetch = (
       const pathParams = customParams?.pathParams || null;
       const queryParams = customParams?.queryParams || null;
       const method = customParams?.method || 'get'
-      
+
       let tempUrl = url;
       pathParams && Object.keys(pathParams).forEach(key => {
         const placeholder = `:${key}`;
@@ -37,9 +37,9 @@ const useFetch = (
           tempUrl = tempUrl.replace(placeholder, pathParams[key]);
         }
       });
-      const fullUrl = `${pathParams?.region ? baseUrl.replace(":region",pathParams.region) : baseUrl}${tempUrl}`;
+      const fullUrl = `${pathParams?.region ? baseUrl.replace(":region", pathParams.region) : baseUrl}${tempUrl}`;
       const response = await axios({
-        method : method,
+        method: method,
         url: fullUrl,
         signal: controller.signal,
         ...(Auth && {
@@ -49,7 +49,7 @@ const useFetch = (
         }),
         ...(queryParams && { params: queryParams }),
       });
-      
+
       responseData.current = {
         data: response.data,
         error: null
@@ -86,31 +86,16 @@ const useFetch = (
 
 
   const execute = async (
-    params=undefined
+    params = undefined
   ) => {
-    setCustomParams((prevState)=>{
-        const newState = {
-          ...prevState,
-          ...(params?.method ? {method:params.method} : {}),
-          ...(params?.pathParams ? {pathParams:params.pathParams} : {}),
-          ...(params?.queryParams ? {queryParams:params.queryParams} : {})
-      }
-      return (newState);
-    });
-    const merged = {
+    const newState = {
       ...customParams,
-      ...params,
-      pathParams: {
-        ...customParams.pathParams,
-        ...params.pathParams
-      },
-      queryParams: {
-        ...customParams.queryParams,
-        ...params.queryParams
-      }
-    };
-
-    await fetchData(merged);
+      ...(params?.method ? { method: params.method } : {}),
+      ...(params?.pathParams ? { pathParams: { ...customParams?.pathParams, ...params.pathParams } } : {}),
+      ...(params?.queryParams ? { queryParams: { ...customParams?.queryParams, ...params.queryParams } } : {})
+    }
+    setCustomParams(newState);
+    await fetchData(newState);
   };
 
   return {

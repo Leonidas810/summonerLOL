@@ -64,15 +64,12 @@ function Home({ }) {
                 await executeGetSummonerbyPUUID({pathParams:{...pathParams}});
                 await executeGetMatchesbyPUUID({pathParams:{...pathParams},queryParams:{...queryParams}});
                 await executeGetMasterybyPUUID({pathParams:{...pathParams}});
-
             } catch (err) {
                 console.log(err)
             }
         }
         handleGetSummonerData();
     }, [dataAccount])
-
-
 
     useEffect(() => {
         const handleWheel = (e) => {
@@ -118,6 +115,14 @@ function Home({ }) {
         }
     }
 
+    const handleFilterMathes = async(params) => {
+        try{
+            await executeGetMatchesbyPUUID(params);
+        }catch(err){
+            console.log(err);
+        }
+    }
+
     return (
         <>
             <div className='relative h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B] overflow-hidden'>
@@ -127,10 +132,10 @@ function Home({ }) {
                 {(dataAccount&& dataSummoner) &&
                     <>
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
-                        <SummonerFilter section={section}/>
+                        <SummonerFilter section={section} handleFilterMathes={handleFilterMathes}/>
                         {/* Filter Card */}
-                        {dataMatch  &&
-                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />}
+                        {(dataMatch && !loadingMatch) &&
+                            <SummonerMatch section={section} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />}
                     </>
                 }
             </div>

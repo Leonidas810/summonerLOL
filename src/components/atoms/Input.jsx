@@ -8,7 +8,8 @@ function Input({
     type,
     containerClass,
     inputClass,
-    iconClass
+    iconClass,
+    required=true
 }) {
     const [selectedInput, setSelectedInput] = useState(false);
     const inputRef = useRef(null);
@@ -47,7 +48,7 @@ function Input({
             {/* Campo de Input */}
             <input
                 type={type}
-                required
+                required={required}
                 name={name}
                 id={name}
                 ref={inputRef}
