@@ -40,8 +40,6 @@ function Home({ }) {
                 await executeGetMasterybyPUUID({ pathParams: { ...pathParams } });
             } catch (err) {
                 console.log(err)
-            } finally {
-                setLoadedAll(false);
             }
         }
         handleGetSummonerData();
@@ -66,6 +64,7 @@ function Home({ }) {
                 ...summonerData.current,
                 topMasteryChamps: champsData
             };
+            setLoadedAll(false);
         }
         handleGetChampAssets();
 
