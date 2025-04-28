@@ -1,6 +1,11 @@
 import Img from "../../../../atoms/Img";
 
-function SummonerCard({section,loadedAll,dataSummoner,dataMastery,summonerData}) {
+function SummonerCard({
+    section,
+    loadedAll,
+    dataSummoner,
+    dataMastery,
+    summonerData}) {
     
     const handleSectionMoveStyle = (section)=>{
         switch (section) {
@@ -43,7 +48,7 @@ function SummonerCard({section,loadedAll,dataSummoner,dataMastery,summonerData})
                             backgroundRepeat: 'no-repeat'
                         }}
                         >
-                            <Img type="profile" params={{ 'idIcon': dataSummoner.profileIconId }} className={"flex items-center justify-center relative w-48"} imgClassName={"rounded-full"}>
+                            <Img type="profile" params={{ 'idIcon': dataSummoner.profileIconId }} className={"flex items-center justify-center relative size-48"} imgClassName={"rounded-full"}>
                                 <div className="absolute border-2 border-[#484848] top-0 -right-0 -translate-x-1/2 bg-black rounded-full p-[4px]">
                                     <p className="font-bold">{dataSummoner.summonerLevel}</p>
                                 </div>
@@ -55,7 +60,7 @@ function SummonerCard({section,loadedAll,dataSummoner,dataMastery,summonerData})
                                 {summonerData.current?.topMasteryChamps.map((e, i) => {
                                     return (
                                         <div key={i}>
-                                            <Img className={"w-20 relative"} type="champion" params={{ champ: e.img }} >
+                                            <Img className={"size-20 relative"} type="champion" params={{ champ: e.img }} >
                                                 <div className="absolute border-2 border-[#484848] left-1/2 -translate-x-1/2 bottom-0 translate-y-1/2 bg-black rounded-lg **:p-[4px]"><p className="truncate">{e.name}</p></div>
                                                 <div className="absolute border-2 border-[#484848] top-0 right-0 translate-x-1/2 bg-black rounded-full p-[4px]">
                                                     <p className="font-bold">{e.level}</p>

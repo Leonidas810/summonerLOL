@@ -4,11 +4,10 @@ import Img from "../../../../atoms/Img";
 import regionOptions from "./constants";
 
 function SearchBar({ 
+    loadedAll,
     section,
     handleGetAccount, 
-    loadingSummoner, 
     dataAccount, 
-    loadingAccount, 
     errorAccount,
     errorSummoner
 }) {
@@ -63,8 +62,8 @@ function SearchBar({
                     <SelectDropDown options={regionOptions} name={"region"} containerClass={"w-1/4 h-full rounded-l-lg"} placeholder={"Region"} icon={"hashtag"} iconClass={"w-6"} inputClass={"w-full"} />
                     <Input type={"text"} name={"name"} containerClass={"w-3/4 rounded-r-lg"} placeholder={"Summoner name + #TAG"} inputClass={"w-7/8 border-l-2"} />
                     <button type="submit" className="absolute right-[1rem] top-1/2 -translate-y-1/2"
-                        disabled={loadingAccount}>
-                        {loadingAccount || loadingSummoner
+                        disabled={loadedAll}>
+                        {loadedAll
                             ?
                             <div className="flex items-center justify-center">
                                 <div className="size-6 border-4 border-black border-t-transparent rounded-full animate-spin" />

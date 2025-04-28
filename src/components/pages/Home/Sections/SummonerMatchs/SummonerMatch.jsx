@@ -2,11 +2,11 @@ import SummonerFilter from "./SummonerFilter";
 import MatchCard from "./MatchCard";
 
 function SummonerMatch({
+    loadedAll,
     summonerData,
     handleGetAccount,
     section,
     dataMatch,
-    loadingMatch,
     dataSpells,
     handleFilterMathes
 }) {
@@ -29,7 +29,7 @@ function SummonerMatch({
         <div className={`absolute w-3/4 left-1/2 -translate-x-1/2 transition-all duration-300 space-y-2`}
             style={handleSectionMoveStyle(section)}>\
             <SummonerFilter section={section} handleFilterMathes={handleFilterMathes} />
-            {(dataMatch && !loadingMatch) ?
+            {(dataMatch && !loadedAll) ?
                 dataMatch.length === 0
                     ? <div>No info</div>
                     : (
@@ -39,7 +39,11 @@ function SummonerMatch({
                             ))}
                         </>
                     )
-                : <div>Error</div>
+                :
+                <div className="flex items-center justify-center">
+                    <div className="size-12 rounded-full border-4 border-gray-300 border-t-white animate-spin" />
+                </div>
+
             }
         </div>
     )

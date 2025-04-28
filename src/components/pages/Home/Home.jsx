@@ -107,7 +107,6 @@ function Home({ }) {
                 ...summonerData.current,
                 ...pathParams,
             }
-
         } catch (err) {
             console.log(err);
         }
@@ -125,13 +124,13 @@ function Home({ }) {
         <>
             <div className='relative h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B] overflow-hidden'>
                 {/*Search Bar */}
-                <SearchBar section={section} handleGetAccount={handleGetAccount} loadingSummoner={loadingSummoner} dataAccount={dataAccount} loadingAccount={loadingAccount} errorAccount={errorAccount} errorSummoner={errorSummoner} />
+                <SearchBar section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} dataAccount={dataAccount} errorAccount={errorAccount} errorSummoner={errorSummoner} />
                 {(dataAccount && dataSummoner) &&
                     <>
                         {/* Summoner Card */}
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
                         {/* Summoner Matchs*/}
-                        <SummonerMatch handleFilterMathes={handleFilterMathes} section={section} handleGetAccount={handleGetAccount} summonerData={summonerData} loadingMatch={loadingMatch} dataMatch={dataMatch} dataSpells={dataSpells} />
+                        <SummonerMatch  section={section} loadedAll={loadedAll} handleFilterMathes={handleFilterMathes} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />
                     </>
                 }
             </div>
