@@ -43,6 +43,7 @@ function MatchCard({ summonerData, match, dataSpells, handleGetAccount }) {
     const teamBlue = participants && participants.slice(0, 5) || null;
     const teamRed = participants && participants.slice(5) || null;
 
+
     return (
         <div className={`shadow-2xl rounded-2xl ${loadingMatchFull || !dataMatchFull || !mySummoner.current ? "bg-[#1E2939]" : mySummoner.current?.win ? "bg-[#87D5FF] text-[#244B60]" : "bg-[#FF8787] text-[#602424]"}`}>
             <div className="flex flex-col sm:flex-row justify-between p-2 space-y-2">

@@ -97,8 +97,8 @@ function Home({ }) {
         try {
             const pathParams = {
                 'region': region ? region : summonerData.current.region,
-                'gameName': gameName,
-                'tagLine': tagLine,
+                'gameName': gameName.trim(),
+                'tagLine': tagLine.trim(),
             }
             const customParams = {
                 method: 'get',
@@ -121,8 +121,6 @@ function Home({ }) {
             console.log(err);
         }
     }
-
-    console.log(dataLeague);
 
     return (
         <>

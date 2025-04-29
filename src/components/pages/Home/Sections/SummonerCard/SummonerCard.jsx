@@ -47,7 +47,7 @@ function SummonerCard({
                         <div className="rounded-2xl" style={
                             currentSide ?
                                 {
-                                    background: 'red',
+                                    background: '#D9D9D9',
                                 }
                                 :
                                 {
@@ -59,16 +59,17 @@ function SummonerCard({
 
                             <div className="flex flex-col sm:flex-row items-center justify-between space-y-10 sm:space-y-0 sm:space-x-2 p-4">
                                 {currentSide ?
-                                    <div className="grid gap-y-2">
-                                        {dataLeague && dataLeague.map((e,i)=>{
-                                            console.log(e);
+                                    <div className="grid gap-y-2 text-black">
+                                        {dataLeague && dataLeague.map((e,i)=>{    
+                                            console.log(e)                                        
                                             return(
-                                                <div className="flex items-center">
-                                                <Img type="rankEmblem" params={{ rankId: e.tier }} className={"w-28 bg-gray-200 rounded-full"}/>
+                                            <div key={i} className="flex items-center select-none">
+                                                <Img type="rankEmblem" params={{ rankId: e.tier }} className={"w-28 bg-gray-500 rounded-full"}/>
                                                 <div className="ml-2">
-                                                    <p>Type {e.queueType}</p>
-                                                    <p>Rank {e.rank}</p>
-                                                    <p>Rank {e.leaguePoints}</p>
+                                                    <p className="text-xl font-bold">{e.queueType}</p>
+                                                    <p>{e.tier} {e.rank}</p>
+                                                    <p>PL: {e.leaguePoints}</p>
+                                                    <p>W: {e.wins} L: {e.losses}</p>
                                                 </div>
                                             </div> 
                                             )
