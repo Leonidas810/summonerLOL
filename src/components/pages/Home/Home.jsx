@@ -3,7 +3,6 @@ import useFetch from "../../../hooks/useFetch/useFetch";
 import { useEffect, useRef, useState } from "react";
 import SummonerCard from "./Sections/SummonerCard/SummonerCard";
 import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
-import SummonerFilter from "./Sections/SummonerMatchs/SummonerFilter";
 
 function Home({ }) {
     const [section, setSection] = useState(1);
@@ -22,6 +21,8 @@ function Home({ }) {
 
     const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("getMatchesofSummoner", false);
 
+    const {data : dataLeague, loading:loadingLeague, error:errorLeague ,execute: executeGetLeagueByPuuid}= useFetch("getLeagueofSummoner",false)
+
     useEffect(() => {
         const handleGetSummonerData = async () => {
             if (!dataAccount) return;
@@ -38,6 +39,7 @@ function Home({ }) {
                 await executeGetSummonerbyPUUID({ pathParams: { ...pathParams } });
                 await executeGetMatchesbyPUUID({ pathParams: { ...pathParams }, queryParams: { ...queryParams } });
                 await executeGetMasterybyPUUID({ pathParams: { ...pathParams } });
+                await executeGetLeagueByPuuid({pathParams:{...pathParams}});
             } catch (err) {
                 console.log(err)
             }
@@ -120,6 +122,8 @@ function Home({ }) {
         }
     }
 
+    console.log(dataLeague);
+
     return (
         <>
             <div className='relative h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B] overflow-hidden'>
@@ -128,7 +132,7 @@ function Home({ }) {
                 {(dataAccount && dataSummoner) &&
                     <>
                         {/* Summoner Card */}
-                        <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
+                        <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} dataLeague={dataLeague} summonerData={summonerData} />
                         {/* Summoner Matchs*/}
                         <SummonerMatch  section={section} loadedAll={loadedAll} handleFilterMathes={handleFilterMathes} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />
                     </>

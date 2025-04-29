@@ -26,6 +26,9 @@ const apiCatalog = {
   getAllSpells: {
     baseUrl: 'https://ddragon.leagueoflegends.com',
     url: '/cdn/15.8.1/data/en_US/summoner.json'
+  },
+  getLeagueofSummoner :{
+    url:'/lol/league/v4/entries/by-puuid/:encryptedPUUID'
   }
 };
 
