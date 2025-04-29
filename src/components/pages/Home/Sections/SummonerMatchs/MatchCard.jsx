@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import useFetch from "../../../../../hooks/useFetch/useFetch";
 import Img from "../../../../atoms/Img";
 
-function MatchCard({ summonerData, match, dataSpells, handleGetAccount }) {
-
+function MatchCard({ summonerData, match, dataSpells, handleGetAccount,parseQueues }) {
+    
     const { data: dataMatchFull, loading: loadingMatchFull, execute } = useFetch(
         "getFullDataofMatch", false, {
         pathParams: { 'matchId': match }
@@ -43,14 +43,13 @@ function MatchCard({ summonerData, match, dataSpells, handleGetAccount }) {
     const teamBlue = participants && participants.slice(0, 5) || null;
     const teamRed = participants && participants.slice(5) || null;
 
-
     return (
         <div className={`shadow-2xl rounded-2xl ${loadingMatchFull || !dataMatchFull || !mySummoner.current ? "bg-[#1E2939]" : mySummoner.current?.win ? "bg-[#87D5FF] text-[#244B60]" : "bg-[#FF8787] text-[#602424]"}`}>
             <div className="flex flex-col sm:flex-row justify-between p-2 space-y-2">
                 <div className="flex flex-col sm:flex-row space-y-6 sm:space-y-0 sm:space-x-10">
                     <div className="space-y-1">
                         <p className="font-bold text-3xl">{loadingMatchFull || !dataMatchFull || !mySummoner.current ? "Cargando..." : mySummoner.current?.win ? "Victoria" : "Derrota"}</p>
-                        <p>{loadingMatchFull || !dataMatchFull || !mySummoner.current ? "Cargando..." : dataMatchFull.info?.gameMode || ''}</p>
+                        <p>{loadingMatchFull || !dataMatchFull || !mySummoner.current ? "Cargando..." : parseQueues[dataMatchFull.info?.queueId] || ''}</p>
                         <p className="font-bold text-xl">{loadingMatchFull || !dataMatchFull || !mySummoner.current ? "Cargando..." : parseTime(dataMatchFull.info.gameDuration)}</p>
                     </div>
                     <div className="space-y-2">

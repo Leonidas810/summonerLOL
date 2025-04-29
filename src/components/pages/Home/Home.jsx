@@ -7,11 +7,14 @@ import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
 function Home({ }) {
     const [section, setSection] = useState(1);
     const [loadedAll, setLoadedAll] = useState(false);
+    const [parseQueues,setParseQueues] = useState(null);
     const summonerData = useRef({});
 
     const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('getAllSpells', true, undefined, false);
 
     const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('getAllChampions', true, undefined, false);
+
+    const {data: dataQueues , loading : loadingQueues,} = useFetch('getAllQueues',true,undefined,false);
 
     const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("getAccountbyRiotId", false);
 
@@ -73,6 +76,19 @@ function Home({ }) {
     }, [dataMastery])
 
     useEffect(() => {
+        if (!dataQueues) return;
+        const handleParseQueues = () => {
+            const parsedQueues = dataQueues.reduce((acc, e) => {
+                acc[e.queueId] = e.description;
+                return acc;
+            }, {});
+            setParseQueues(parsedQueues);
+        };
+        handleParseQueues();
+    }, [dataQueues]);
+    
+
+    useEffect(() => {
         const handleWheel = (e) => {
             const isInDropdown = e.target.closest('.dropdown-scroll');
             if (isInDropdown) return;
@@ -132,7 +148,7 @@ function Home({ }) {
                         {/* Summoner Card */}
                         <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} dataLeague={dataLeague} summonerData={summonerData} />
                         {/* Summoner Matchs*/}
-                        <SummonerMatch  section={section} loadedAll={loadedAll} handleFilterMathes={handleFilterMathes} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} />
+                        <SummonerMatch  section={section} loadedAll={loadedAll} handleFilterMathes={handleFilterMathes} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} parseQueues={parseQueues}/>
                     </>
                 }
             </div>

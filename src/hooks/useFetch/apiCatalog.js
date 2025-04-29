@@ -29,6 +29,10 @@ const apiCatalog = {
   },
   getLeagueofSummoner :{
     url:'/lol/league/v4/entries/by-puuid/:encryptedPUUID'
+  },
+  getAllQueues :{
+    baseUrl:'https://static.developer.riotgames.com',
+    url:'/docs/lol/queues.json'
   }
 };
 

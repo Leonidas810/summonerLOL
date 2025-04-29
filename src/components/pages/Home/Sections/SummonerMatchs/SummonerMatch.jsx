@@ -8,6 +8,7 @@ function SummonerMatch({
     section,
     dataMatch,
     dataSpells,
+    parseQueues,
     handleFilterMathes
 }) {
 
@@ -35,7 +36,7 @@ function SummonerMatch({
                     : (
                         <>
                             {dataMatch.map((match, _) => (
-                                <MatchCard key={match} summonerData={summonerData} match={match} dataSpells={dataSpells} handleGetAccount={handleGetAccount} />
+                                <MatchCard key={match} summonerData={summonerData} match={match} dataSpells={dataSpells} handleGetAccount={handleGetAccount} parseQueues={parseQueues}/>
                             ))}
                         </>
                     )

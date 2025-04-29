@@ -8,7 +8,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route index element={<Home />} />
-        <Route path="/:summonerName" element={<div></div>} />
       </Routes>
     </BrowserRouter>
   );
