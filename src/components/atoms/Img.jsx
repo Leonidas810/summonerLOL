@@ -5,22 +5,27 @@ function Img({
     params,
     className,
     imgClassName,
-    children
+    children,
+    onClick=undefined,
 }) {
 
     let finalSrc = '';
     const baseUrl = 'https://ddragon.leagueoflegends.com';
-    let url = apiImg[type]?.url || `assets/icons/:icon.webp`;
+    let url = apiImg[type]?.url || null;
+    if(!url) return
     params && Object.keys(params).forEach((key) => {
         const placeholder = `:${key}`
         if (url.includes(placeholder)) {
             url = url.replace(placeholder, params[key]);
         }
     })
-    finalSrc = `${type === 'icon' ? '':baseUrl}${url}`;
+
+    finalSrc = `${!url.includes("assets") ? `${baseUrl}${url}` : `${url}`}`;
 
     return (
-        <div className={`${className || ""}`}>
+        <div className={`${className || ""}`}
+        onClick={onClick ?? (() => {})}
+        >
             <img className={`${imgClassName || ""}`} src={`${finalSrc}`} alt={`icon`} />
             {children}
         </div>

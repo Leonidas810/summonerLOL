@@ -3,29 +3,52 @@ import useFetch from "../../../hooks/useFetch/useFetch";
 import { useEffect, useRef, useState } from "react";
 import SummonerCard from "./Sections/SummonerCard/SummonerCard";
 import SummonerMatch from "./Sections/SummonerMatchs/SummonerMatch";
-import { data } from "react-router-dom";
 
 function Home({ }) {
     const [section, setSection] = useState(1);
-    const [loadedAll,setLoadedAll] = useState(false);
+    const [loadedAll, setLoadedAll] = useState(false);
+    const [parseQueues,setParseQueues] = useState(null);
     const summonerData = useRef({});
 
-    const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('get', 'getAllSpells', true, undefined, undefined, false);
+    const { data: dataSpells, loading: loadingSpells, error: errorSpells } = useFetch('getAllSpells', true, undefined, false);
 
-    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('get', 'getAllChampions', true, undefined, undefined, false);
+    const { data: dataChampions, loading: loadingChampions, error: errorChampions } = useFetch('getAllChampions', true, undefined, false);
 
-    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("get", "getAccountbyRiotId", false,);
+    const {data: dataQueues , loading : loadingQueues,} = useFetch('getAllQueues',true,undefined,false);
 
-    const { data: dataSummoner, loading: loadingSummoner, error: errorSummoner, execute: executeGetSummonerbyPUUID } = useFetch("get", "getSummonerbyPUUID",
-        false,
-    );
+    const { data: dataAccount, loading: loadingAccount, error: errorAccount, execute: executeGetAccountbyRiotId } = useFetch("getAccountbyRiotId", false);
 
-    const { data: dataMastery, loading: loadingMastery, error: errorMastery, execute: executeGetMasterybyPUUID } = useFetch("get", "getTopMasteryofSummoner",
-        false,
-    );
+    const { data: dataSummoner, loading: loadingSummoner, error: errorSummoner, execute: executeGetSummonerbyPUUID } = useFetch("getSummonerbyPUUID", false);
 
-    const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("get", "getMatchesofSummoner", false);
+    const { data: dataMastery, loading: loadingMastery, error: errorMastery, execute: executeGetMasterybyPUUID } = useFetch("getTopMasteryofSummoner", false);
 
+    const { data: dataMatch, loading: loadingMatch, error: errorMatch, execute: executeGetMatchesbyPUUID } = useFetch("getMatchesofSummoner", false);
+
+    const {data : dataLeague, loading:loadingLeague, error:errorLeague ,execute: executeGetLeagueByPuuid}= useFetch("getLeagueofSummoner",false)
+
+    useEffect(() => {
+        const handleGetSummonerData = async () => {
+            if (!dataAccount) return;
+            setLoadedAll(true);
+            try {
+                const pathParams = {
+                    'region': summonerData.current.region,
+                    'encryptedPUUID': dataAccount.puuid
+                }
+                const queryParams = {
+                    'start': 0,
+                    count: 5
+                }
+                await executeGetSummonerbyPUUID({ pathParams: { ...pathParams } });
+                await executeGetMatchesbyPUUID({ pathParams: { ...pathParams }, queryParams: { ...queryParams } });
+                await executeGetMasterybyPUUID({ pathParams: { ...pathParams } });
+                await executeGetLeagueByPuuid({pathParams:{...pathParams}});
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        handleGetSummonerData();
+    }, [dataAccount])
 
     useEffect(() => {
         const handleGetChampAssets = () => {
@@ -42,7 +65,6 @@ function Home({ }) {
                 }
                 return champData;
             }).filter(name => name !== null);
-
             summonerData.current = {
                 ...summonerData.current,
                 topMasteryChamps: champsData
@@ -54,37 +76,24 @@ function Home({ }) {
     }, [dataMastery])
 
     useEffect(() => {
-        const handleGetSummonerData = async () => {
-            setLoadedAll(true);
-            if (!dataAccount) return;
-            try {
-                const pathParams = {
-                    'region': summonerData.current.region,
-                    'encryptedPUUID': dataAccount.puuid
-                }
-                const queryParams = {
-                    'start': 0,
-                    count: 10
-                }
-                await executeGetSummonerbyPUUID(pathParams);
-                await executeGetMatchesbyPUUID(pathParams, queryParams);
-                await executeGetMasterybyPUUID(pathParams);
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        handleGetSummonerData();
-    }, [dataAccount])
-
-
+        if (!dataQueues) return;
+        const handleParseQueues = () => {
+            const parsedQueues = dataQueues.reduce((acc, e) => {
+                acc[e.queueId] = e.description;
+                return acc;
+            }, {});
+            setParseQueues(parsedQueues);
+        };
+        handleParseQueues();
+    }, [dataQueues]);
+    
 
     useEffect(() => {
         const handleWheel = (e) => {
             const isInDropdown = e.target.closest('.dropdown-scroll');
             if (isInDropdown) return;
+            if (errorAccount || errorSummoner) return;
             e.preventDefault();
-            if (loadingSummoner || loadingMastery || loadingMatch) return;
             setSection((prevSection) => {
                 if (e.deltaY > 0) {
                     return Math.min(prevSection + 1, 10);
@@ -93,42 +102,53 @@ function Home({ }) {
                 }
             });
         };
+        if (errorAccount || errorSummoner) setSection(1);
         window.addEventListener("wheel", handleWheel, { passive: false });
         return () => {
             window.removeEventListener("wheel", handleWheel);
         };
-    }, []);
+    }, [errorAccount, errorSummoner]);
 
-
-    const handleGetAccount = async (gameName,tagLine,region=undefined) =>{
-        try{
+    const handleGetAccount = async (gameName, tagLine, region = undefined) => {
+        try {
             const pathParams = {
-                'region': region ? region :summonerData.current.region,
-                'gameName': gameName,
-                'tagLine': tagLine,
+                'region': region ? region : summonerData.current.region,
+                'gameName': gameName.trim(),
+                'tagLine': tagLine.trim(),
             }
-            await executeGetAccountbyRiotId(pathParams);
+            const customParams = {
+                method: 'get',
+                pathParams: { ...pathParams },
+            }
+            await executeGetAccountbyRiotId(customParams);
             summonerData.current = {
                 ...summonerData.current,
                 ...pathParams,
             }
-        }catch(err){
+        } catch (err) {
             console.log(err);
         }
     }
 
+    const handleFilterMathes = async (params) => {
+        try {
+            await executeGetMatchesbyPUUID(params);
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     return (
         <>
             <div className='relative h-screen w-screen bg-linear-to-b from-[#141213] to-[#2B2B2B] overflow-hidden'>
                 {/*Search Bar */}
-                <SearchBar section={section} handleGetAccount={handleGetAccount} loadingSummoner={loadingSummoner} dataAccount={dataAccount} loadingAccount={loadingAccount} errorAccount={errorAccount} />
-                {/* Summoner Card */}
-                {dataAccount &&
+                <SearchBar section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} dataAccount={dataAccount} errorAccount={errorAccount} errorSummoner={errorSummoner} />
+                {(dataAccount && dataSummoner) &&
                     <>
-                        <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} summonerData={summonerData} />
-                        {dataMatch && 
-                            <SummonerMatch section={section} loadedAll={loadedAll} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells}/>}
+                        {/* Summoner Card */}
+                        <SummonerCard section={section} loadedAll={loadedAll} dataSummoner={dataSummoner} dataMastery={dataMastery} dataLeague={dataLeague} summonerData={summonerData} />
+                        {/* Summoner Matchs*/}
+                        <SummonerMatch  section={section} loadedAll={loadedAll} handleFilterMathes={handleFilterMathes} handleGetAccount={handleGetAccount} summonerData={summonerData} dataMatch={dataMatch} dataSpells={dataSpells} parseQueues={parseQueues}/>
                     </>
                 }
             </div>

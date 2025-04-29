@@ -2,7 +2,17 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 import apiCatalog from './apiCatalog';
 
-const useFetch = (method = "get", api, immediate = true, pathParams = undefined, queryParams = undefined, Auth = true) => {
+const useFetch = (
+  endPoint,
+  immediate = true,
+  params = {
+    method: 'get',
+    pathParams: {},
+    queryParams: {},
+  },
+  Auth = true
+) => {
+  const [customParams, setCustomParams] = useState(params);
   const [loading, setLoading] = useState(false);
   const responseData = useRef({
     data: null,
@@ -10,12 +20,16 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
   });
 
   const controller = new AbortController();
-  const baseUrl = apiCatalog[api]?.baseUrl || `https://:region.api.riotgames.com`;
-  const url = apiCatalog[api]?.url || '';
+  const baseUrl = apiCatalog[endPoint]?.baseUrl || `https://:region.api.riotgames.com`;
+  const url = apiCatalog[endPoint]?.url || '';
 
-  const fetchData = useCallback(async (pathParams,queryParams) => {
+  const fetchData = useCallback(async (customParams) => {
     setLoading(true)
     try {
+      const pathParams = customParams?.pathParams || null;
+      const queryParams = customParams?.queryParams || null;
+      const method = customParams?.method || 'get'
+
       let tempUrl = url;
       pathParams && Object.keys(pathParams).forEach(key => {
         const placeholder = `:${key}`;
@@ -23,9 +37,9 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
           tempUrl = tempUrl.replace(placeholder, pathParams[key]);
         }
       });
-      const fullUrl = `${pathParams?.region ? baseUrl.replace(":region",pathParams.region) : baseUrl}${tempUrl}`;
+      const fullUrl = `${pathParams?.region ? baseUrl.replace(":region", pathParams.region) : baseUrl}${tempUrl}`;
       const response = await axios({
-        method,
+        method: method,
         url: fullUrl,
         signal: controller.signal,
         ...(Auth && {
@@ -40,35 +54,48 @@ const useFetch = (method = "get", api, immediate = true, pathParams = undefined,
         data: response.data,
         error: null
       };
+
     } catch (err) {
+
       if (axios.isCancel(err)) {
         console.log('Request canceled', err.message);
+
       } else {
+        console.log(err);
         responseData.current = {
           data: null,
           error: err
         };
       }
+
     } finally {
       setLoading(false);
     }
-  }, [method, pathParams,queryParams]);
+  }, [customParams]);
 
 
   useEffect(() => {
     if (immediate) {
-      const fetch = async () => {
-        await fetchData(pathParams,queryParams);
+      const fetch = () => {
+        fetchData(customParams);
       };
       fetch();
     }
-
     return () => controller.abort();
-  }, [immediate, pathParams,queryParams]);
+  }, []);
 
 
-  const execute = async (pathParams = undefined,queryParams=undefined) => {
-    await fetchData(pathParams,queryParams);
+  const execute = async (
+    params = undefined
+  ) => {
+    const newState = {
+      ...customParams,
+      ...(params?.method ? { method: params.method } : {}),
+      ...(params?.pathParams ? { pathParams: { ...customParams?.pathParams, ...params.pathParams } } : {}),
+      ...(params?.queryParams ? { queryParams: { ...customParams?.queryParams, ...params.queryParams } } : {})
+    }
+    setCustomParams(newState);
+    await fetchData(newState);
   };
 
   return {

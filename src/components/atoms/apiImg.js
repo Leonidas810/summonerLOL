@@ -13,6 +13,11 @@ const apiImg = {
     },
     spell:{
         url:'/cdn/15.8.1/img/spell/:idSpell.png'
+    },icon:{
+        url:'assets/icons/:icon.webp'
+    },
+    rankEmblem:{
+        url:'assets/rank/emblems/:rankId.webp'
     }
 }
 
